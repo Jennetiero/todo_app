@@ -7,6 +7,7 @@ import { collection, addDoc, Timestamp } from 'firebase/firestore'
 
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState('')
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {

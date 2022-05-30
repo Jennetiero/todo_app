@@ -1,11 +1,32 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 import Box from '@mui/material/Box'
+import {
+  doc,
+  updateDoc,
+  deleteDoc,
+  query,
+  collection,
+  onSnapshot
+} from 'firebase/firestore'
+import { db } from '../src/firebase'
 import ToDo from './components/ToDo'
 import ToDoForm from './components/ToDoForm'
 
 function App() {
   const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+    const q = query(collection(db, 'todos'))
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let todosArray = []
+      querySnapshot.forEach((doc) => {
+        todosArray.push({ ...doc.data(), id: doc.id })
+      })
+      setTodos(todosArray)
+    })
+    return () => unsub()
+  }, [])
 
   const addTask = (userInput: string) => {
     if (userInput) {
@@ -22,7 +43,12 @@ function App() {
     }
   }
 
-  const removeTask = (id: number) => {
+  const handleComplete = async (todo) => {
+    await updateDoc(doc(db, 'todos', todo.id), { completed: !todo.completed })
+  }
+
+  const removeTask = async (id: any) => {
+    await deleteDoc(doc(db, 'todos', id))
     setTodos([...todos.filter((todo) => todo.id !== id)])
   }
 
@@ -31,7 +57,12 @@ function App() {
       <h1>List of tasks: {todos.length}</h1>
       <ToDoForm addTask={addTask} />
       {todos.map((todo) => (
-        <ToDo todo={todo} key={todo.id} removeTask={removeTask} />
+        <ToDo
+          todo={todo}
+          key={todo.id}
+          removeTask={removeTask}
+          handleComplete={handleComplete}
+        />
       ))}
     </Box>
   )
