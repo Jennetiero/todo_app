@@ -7,7 +7,7 @@ import ToDoForm from './components/ToDoForm'
 function App() {
   const [todos, setTodos] = useState([])
 
-  const addTask = (userInput) => {
+  const addTask = (userInput: string) => {
     if (userInput) {
       // Get current date
       const elapsedDate = Date.now()
@@ -22,7 +22,7 @@ function App() {
     }
   }
 
-  const removeTask = (id) => {
+  const removeTask = (id: number) => {
     setTodos([...todos.filter((todo) => todo.id !== id)])
   }
 

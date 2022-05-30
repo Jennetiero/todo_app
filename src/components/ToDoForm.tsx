@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { KeyboardEvent, KeyboardEventHandler, useState } from 'react'
 import { ThemeProvider, Input } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -6,17 +6,18 @@ import theme from '../theme'
 
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState('')
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     addTask(userInput)
     setUserInput('')
   }
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     setUserInput(e.currentTarget.value)
   }
-  const handleKeyPress = (e) => {
-    if (e.keyCode === '13') {
-      handleSubmit(e)
-    }
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+    ) => {
+      if (e.keyCode === 13) handleSubmit()
   }
   return (
     <ThemeProvider theme={theme}>
