@@ -7,7 +7,6 @@ import theme from '../theme'
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState('')
   const handleSubmit = (e) => {
-    e.preventDefault()
     addTask(userInput)
     setUserInput('')
   }
@@ -15,7 +14,7 @@ function ToDoForm({ addTask }) {
     setUserInput(e.currentTarget.value)
   }
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.keyCode === '13') {
       handleSubmit(e)
     }
   }

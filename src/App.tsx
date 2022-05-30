@@ -28,9 +28,7 @@ function App() {
 
   return (
     <Box sx={mainBox} className="App">
-      <header>
-        <h1>List of tasks: {todos.length}</h1>
-      </header>
+      <h1>List of tasks: {todos.length}</h1>
       <ToDoForm addTask={addTask} />
       {todos.map((todo) => (
         <ToDo todo={todo} key={todo.id} removeTask={removeTask} />
