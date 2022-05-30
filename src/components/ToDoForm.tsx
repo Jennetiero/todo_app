@@ -2,11 +2,23 @@ import { KeyboardEvent, useState } from 'react'
 import { Input } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { db } from '../firebase'
+import { collection, addDoc, Timestamp } from 'firebase/firestore'
 
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState('')
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    try {
+      await addDoc(collection(db, 'tasks'), {
+        userInput: userInput,
+        completed: false,
+        created: Timestamp.now()
+      })
+      setUserInput('')
+    } catch (err) {
+      alert(err)
+    }
     addTask(userInput)
     setUserInput('')
   }
@@ -30,7 +42,13 @@ function ToDoForm({ addTask }) {
         placeholder="Enter a task..."
         disableUnderline={true}
       />
-      <Button sx={button} variant="contained" onClick={handleSubmit}>
+      <Button
+        sx={button}
+        variant="contained"
+        onClick={handleSubmit}
+        className="addTask"
+        name="addTask"
+      >
         Add
       </Button>
     </Box>
