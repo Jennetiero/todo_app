@@ -1,12 +1,12 @@
-import { KeyboardEvent, KeyboardEventHandler, useState } from 'react'
-import { ThemeProvider, Input } from '@mui/material'
+import { KeyboardEvent, useState } from 'react'
+import { Input } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import theme from '../theme'
 
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState('')
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
     addTask(userInput)
     setUserInput('')
   }
@@ -15,35 +15,25 @@ function ToDoForm({ addTask }) {
   ) => {
     setUserInput(e.currentTarget.value)
   }
-  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
-    ) => {
-      if (e.keyCode === 13) handleSubmit()
+  const handleKeyPress = (
+    e: KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    if (e.key === 'Enter') handleSubmit(e)
   }
   return (
-    <ThemeProvider theme={theme}>
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-      >
-        <Input
-          sx={input}
-          value={userInput}
-          onChange={handleChange}
-          onKeyDown={handleKeyPress}
-          placeholder="Enter a task..."
-          disableUnderline={true}
-        />
-        <Button
-          sx={button}
-          variant="contained"
-          onClick={(e) => handleSubmit(e)}
-        >
-          Add
-        </Button>
-      </Box>
-    </ThemeProvider>
+    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+      <Input
+        sx={input}
+        value={userInput}
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+        placeholder="Enter a task..."
+        disableUnderline={true}
+      />
+      <Button sx={button} variant="contained" onClick={handleSubmit}>
+        Add
+      </Button>
+    </Box>
   )
 }
 
