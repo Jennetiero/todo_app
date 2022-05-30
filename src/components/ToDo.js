@@ -28,7 +28,7 @@ function ToDo({ todo, toggleTask, removeTask }) {
       >
         <ListItemText
           className="item-text"
-          primary={todo.task}
+          primary={`${todo.task} ${todo.date}`}
           onClick={() => toggleTask(todo.id)}
         />
       </ListItem>

@@ -10,10 +10,13 @@ function App() {
   const addTask = (userInput) => {
     console.log("userInput: ", userInput);
     if (userInput) {
+      const elapsedDate = Date.now();
+      const date = new Date(elapsedDate).toUTCString();
       const newItem = {
         id: Math.random().toString(36).substr(2, 9),
         task: userInput,
         complete: false,
+        date,
       };
       setTodos([...todos, newItem]);
     }
