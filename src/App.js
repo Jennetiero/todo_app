@@ -1,50 +1,50 @@
-import React from "react";
-import { useState } from "react";
-import ToDo from "./components/ToDo";
-import ToDoForm from "./components/ToDoForm";
-import Box from "@mui/material/Box";
+import { useState } from 'react'
+import { nanoid } from 'nanoid'
+import Box from '@mui/material/Box'
+import ToDo from './components/ToDo'
+import ToDoForm from './components/ToDoForm'
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState([])
 
   const addTask = (userInput) => {
-    console.log("userInput: ", userInput);
     if (userInput) {
-      const elapsedDate = Date.now();
-      const date = new Date(elapsedDate).toUTCString();
+      // Get current date
+      const elapsedDate = Date.now()
+      const date = new Date(elapsedDate).toUTCString()
       const newItem = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: nanoid(),
         task: userInput,
         complete: false,
-        date,
-      };
-      setTodos([...todos, newItem]);
+        date
+      }
+      setTodos([...todos, newItem])
     }
-  };
+  }
 
   const removeTask = (id) => {
-    setTodos([...todos.filter((todo) => todo.id !== id)]);
-  };
+    setTodos([...todos.filter((todo) => todo.id !== id)])
+  }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      className="App"
-    >
+    <Box sx={mainBox} className="App">
       <header>
         <h1>List of tasks: {todos.length}</h1>
       </header>
       <ToDoForm addTask={addTask} />
-      {todos.map((todo) => {
-        return <ToDo todo={todo} key={todo.id} removeTask={removeTask} />;
-      })}
+      {todos.map((todo) => (
+        <ToDo todo={todo} key={todo.id} removeTask={removeTask} />
+      ))}
     </Box>
-  );
+  )
 }
 
-export default App;
+// Styles
+const mainBox = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+export default App

@@ -1,24 +1,24 @@
-import { useState } from "react";
-import { ThemeProvider, Input } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import theme from "../theme";
+import { useState } from 'react'
+import { ThemeProvider, Input } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import theme from '../theme'
 
 function ToDoForm({ addTask }) {
-  const [userInput, setUserInput] = useState("");
+  const [userInput, setUserInput] = useState('')
   const handleSubmit = (e) => {
-    e.preventDefault();
-    addTask(userInput);
-    setUserInput("");
-  };
+    e.preventDefault()
+    addTask(userInput)
+    setUserInput('')
+  }
   const handleChange = (e) => {
-    setUserInput(e.currentTarget.value);
-  };
+    setUserInput(e.currentTarget.value)
+  }
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit(e);
+    if (e.key === 'Enter') {
+      handleSubmit(e)
     }
-  };
+  }
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -28,12 +28,7 @@ function ToDoForm({ addTask }) {
         onSubmit={handleSubmit}
       >
         <Input
-          sx={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "4px 0 0 4px",
-            border: "2px solid #ce93d8",
-          }}
+          sx={input}
           value={userInput}
           onChange={handleChange}
           onKeyDown={handleKeyPress}
@@ -41,15 +36,7 @@ function ToDoForm({ addTask }) {
           disableUnderline={true}
         />
         <Button
-          sx={{
-            position: "absolute",
-            width: "40px",
-            padding: "13px",
-            ml: "3px",
-            borderRadius: "3px",
-            cursor: "pointer",
-            outline: "none",
-          }}
+          sx={button}
           variant="contained"
           onClick={(e) => handleSubmit(e)}
         >
@@ -57,7 +44,25 @@ function ToDoForm({ addTask }) {
         </Button>
       </Box>
     </ThemeProvider>
-  );
+  )
 }
 
-export default ToDoForm;
+// Styles
+const input = {
+  width: '100%',
+  padding: '8px',
+  borderRadius: '4px 0 0 4px',
+  border: '2px solid #ce93d8'
+}
+
+const button = {
+  position: 'absolute',
+  width: '40px',
+  padding: '13px',
+  ml: '3px',
+  borderRadius: '3px',
+  cursor: 'pointer',
+  outline: 'none'
+}
+
+export default ToDoForm
