@@ -1,17 +1,12 @@
 import { useState } from "react";
+import { ThemeProvider, Input } from "@mui/material";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { makeStyles } from "@material-ui/styles";
-
-const useStyles = makeStyles({
-  textField: {
-    outline: "none",
-  },
-});
+import Button from "@mui/material/Button";
+import theme from "../theme";
 
 function ToDoForm({ addTask }) {
   const [userInput, setUserInput] = useState("");
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     addTask(userInput);
     setUserInput("");
@@ -25,26 +20,43 @@ function ToDoForm({ addTask }) {
     }
   };
   return (
-    <Box
-      component="form"
-      sx={{
-        "& > :not(style)": { m: 1, width: "25ch" },
-      }}
-      noValidate
-      autoComplete="off"
-      onSubmit={handleSubmit}
-    >
-      <TextField
-        value={userInput}
-        id="outlined-basic"
-        variant="outlined"
-        className="textField"
-        onChange={handleChange}
-        onKeyDown={handleKeyPress}
-        placeholder="Enter a task..."
-      />
-      <button>Add</button>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+      >
+        <Input
+          sx={{
+            width: "100%",
+            padding: "8px",
+            borderRadius: "4px 0 0 4px",
+            border: "2px solid #ce93d8",
+          }}
+          value={userInput}
+          onChange={handleChange}
+          onKeyDown={handleKeyPress}
+          placeholder="Enter a task..."
+          disableUnderline={true}
+        />
+        <Button
+          sx={{
+            position: "absolute",
+            width: "40px",
+            padding: "13px",
+            ml: "3px",
+            borderRadius: "3px",
+            cursor: "pointer",
+            outline: "none",
+          }}
+          variant="contained"
+          onClick={(e) => handleSubmit(e)}
+        >
+          Add
+        </Button>
+      </Box>
+    </ThemeProvider>
   );
 }
 
