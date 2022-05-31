@@ -4,16 +4,13 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ListItemText from '@mui/material/ListItemText'
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
-import { db } from '../firebase'
-import { isTemplateExpression } from 'typescript'
-import { useState } from 'react'
+import { Task } from '../interfaces/task'
 
 function ToDo({ todo, removeTask, handleComplete }) {
-  const { id, task, date } = todo
+  const { id, userInput, created }: Task = todo
 
   return (
-    <List className="item-todo">
+    <List>
       <ListItem
         secondaryAction={
           <IconButton
@@ -25,8 +22,9 @@ function ToDo({ todo, removeTask, handleComplete }) {
           </IconButton>
         }
       >
-        <ListItemText className="item-text" primary={`${task} ${date}`} />
+        <ListItemText primary={userInput} secondary={created} />
         <IconButton
+          style={{ color: '#2dd36f' }}
           className="button-complete"
           onClick={() => handleComplete(todo)}
         >

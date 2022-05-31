@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import { db } from '../firebase'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
 
-function ToDoForm({ addTask }) {
+function ToDoForm() {
   const [userInput, setUserInput] = useState('')
 
   const handleSubmit = async (e) => {
@@ -33,21 +33,34 @@ function ToDoForm({ addTask }) {
     if (e.key === 'Enter') handleSubmit(e)
   }
   return (
-    <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+    <Box
+      width={'100%'}
+      textAlign="center"
+      component="form"
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
       <Input
-        sx={input}
+        sx={{ ...input, borderColor: userInput ? '#3880ff' : '#84a8e8' }}
         value={userInput}
         onChange={handleChange}
         onKeyDown={handleKeyPress}
         placeholder="Enter a task..."
         disableUnderline={true}
+        autoComplete="off"
       />
       <Button
+        style={{
+          backgroundColor: userInput ? '#3880ff' : '#84a8e8',
+          color: 'white'
+        }}
         sx={button}
         variant="contained"
         onClick={handleSubmit}
         className="addTask"
         name="addTask"
+        disabled={userInput ? false : true}
       >
         Add
       </Button>
@@ -57,10 +70,10 @@ function ToDoForm({ addTask }) {
 
 // Styles
 const input = {
-  width: '100%',
+  width: '30%',
   padding: '8px',
   borderRadius: '4px 0 0 4px',
-  border: '2px solid #ce93d8'
+  border: '2px solid'
 }
 
 const button = {

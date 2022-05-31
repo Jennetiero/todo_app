@@ -1,80 +1,157 @@
 import { useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
-import Box from '@mui/material/Box'
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography
+} from '@mui/material'
 import {
   doc,
   updateDoc,
   deleteDoc,
-  query,
   collection,
-  onSnapshot
+  FirestoreDataConverter,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  WithFieldValue,
+  DocumentData
 } from 'firebase/firestore'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { db } from '../src/firebase'
 import ToDo from './components/ToDo'
 import ToDoForm from './components/ToDoForm'
 import NavBar from './components/NavBar'
+import { Task } from './interfaces/task'
 
-function App() {
-  const [todos, setTodos] = useState([])
-
-  useEffect(() => {
-    const q = query(collection(db, 'todos'))
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      let todosArray = []
-      querySnapshot.forEach((doc) => {
-        todosArray.push({ ...doc.data(), id: doc.id })
-      })
-      setTodos(todosArray)
-    })
-    return () => unsub()
-  }, [])
-
-  const addTask = (userInput: string) => {
-    if (userInput) {
-      // Get current date
-      const elapsedDate = Date.now()
-      const date = new Date(elapsedDate).toUTCString()
-      const newItem = {
-        id: nanoid(),
-        task: userInput,
-        complete: false,
-        date
-      }
-      setTodos([...todos, newItem])
+const converter: FirestoreDataConverter<Task> = {
+  toFirestore(task: WithFieldValue<Task>): DocumentData {
+    return {
+      completed: task.completed,
+      created: task.created,
+      userInput: task.userInput
+    }
+  },
+  fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions) {
+    const data = snapshot.data(options)
+    return {
+      completed: data.completed,
+      id: snapshot.id,
+      ref: snapshot.ref,
+      created: data.created.toDate().toLocaleString(),
+      userInput: data.userInput
     }
   }
+}
+
+function App() {
+  const ref = collection(db, 'tasks').withConverter(converter)
+  const [tasks, loading, error] = useCollectionData(ref)
+  const [completedTasks, setCompletedTasks] = useState([])
+  const [pendingTasks, setPendingTasks] = useState([])
 
   const handleComplete = async (todo) => {
-    await updateDoc(doc(db, 'todos', todo.id), { completed: !todo.completed })
+    await updateDoc(doc(db, 'tasks', todo.id), { completed: !todo.completed })
   }
 
   const removeTask = async (id: any) => {
-    await deleteDoc(doc(db, 'todos', id))
-    setTodos([...todos.filter((todo) => todo.id !== id)])
+    await deleteDoc(doc(db, 'tasks', id))
   }
 
+  useEffect(() => {
+    if (tasks) {
+      const complTasks = tasks.filter((task) => task.completed)
+      setCompletedTasks(complTasks)
+
+      const pendTasks = tasks.filter((task) => !task.completed)
+      setPendingTasks(pendTasks)
+    }
+  }, [tasks])
+
   return (
-    <Box sx={mainBox} className="App">
-      <NavBar total={todos.length} />
-      <ToDoForm addTask={addTask} />
-      {todos.map((todo) => (
-        <ToDo
-          todo={todo}
-          key={todo.id}
-          removeTask={removeTask}
-          handleComplete={handleComplete}
-        />
-      ))}
-    </Box>
+    <Grid container>
+      {tasks && (
+        <>
+          <NavBar total={tasks.length} />
+          <Grid xs={12} item marginTop={5}>
+            <Box sx={mainBox} className="App">
+              <ToDoForm />
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              display={'flex'}
+              flexDirection={'row'}
+              justifyContent="space-around"
+              padding={10}
+            >
+              <Card sx={card} variant="outlined">
+                <CardHeader sx={cardHeader} title="To Be Done" />
+                <CardContent>
+                  {pendingTasks.length > 0 ? (
+                    pendingTasks.map((todo) => (
+                      <ToDo
+                        todo={todo}
+                        key={todo.id}
+                        removeTask={removeTask}
+                        handleComplete={handleComplete}
+                      />
+                    ))
+                  ) : (
+                    <Typography>No Pending Tasks. All Good!</Typography>
+                  )}
+                </CardContent>
+              </Card>
+              <Card sx={card} variant="outlined">
+                <CardHeader
+                  sx={{ ...cardHeader, backgroundColor: '#2dd36f' }}
+                  title="Completed Tasks"
+                />
+                <CardContent sx={center}>
+                  {completedTasks.length > 0 ? (
+                    completedTasks.map((todo) => (
+                      <ToDo
+                        todo={todo}
+                        key={todo.id}
+                        removeTask={removeTask}
+                        handleComplete={handleComplete}
+                      />
+                    ))
+                  ) : (
+                    <Typography>No Tasks Completed yet</Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Box>
+          </Grid>
+        </>
+      )}
+    </Grid>
   )
 }
 
 // Styles
+const center = {
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
 const mainBox = {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center'
+  ...center
+}
+
+const card = {
+  borderRadius: 2,
+  width: '40%',
+  height: '100%'
+}
+
+const cardHeader = {
+  backgroundColor: '#3880ff',
+  color: '#fff'
 }
 
 export default App
