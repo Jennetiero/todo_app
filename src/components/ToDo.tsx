@@ -6,7 +6,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ListItemText from '@mui/material/ListItemText'
 import { Task } from '../interfaces/task'
 
-function ToDo({ todo, removeTask, handleComplete }) {
+function ToDo({ todo, removeTask, handleComplete, completed }) {
   const { id, userInput, created }: Task = todo
 
   return (
@@ -28,7 +28,7 @@ function ToDo({ todo, removeTask, handleComplete }) {
           className="button-complete"
           onClick={() => handleComplete(todo)}
         >
-          <CheckCircleIcon id="i" />
+          {!completed && <CheckCircleIcon id="i" />}
         </IconButton>
       </ListItem>
     </List>

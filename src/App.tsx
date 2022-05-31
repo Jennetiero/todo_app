@@ -94,6 +94,7 @@ function App() {
                     {pendingTasks.length > 0 ? (
                       pendingTasks.map((todo) => (
                         <ToDo
+                          completed={false}
                           todo={todo}
                           key={todo.id}
                           removeTask={removeTask}
@@ -116,6 +117,7 @@ function App() {
                     {completedTasks.length > 0 ? (
                       completedTasks.map((todo) => (
                         <ToDo
+                          completed={true}
                           todo={todo}
                           key={todo.id}
                           removeTask={removeTask}
