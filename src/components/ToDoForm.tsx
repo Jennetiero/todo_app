@@ -14,13 +14,12 @@ function ToDoForm({ addTask }) {
       await addDoc(collection(db, 'tasks'), {
         userInput: userInput,
         completed: false,
-        created: Timestamp.now()
+        created: Timestamp.fromDate(new Date())
       })
       setUserInput('')
     } catch (err) {
       alert(err)
     }
-    addTask(userInput)
     setUserInput('')
   }
   const handleChange = (
