@@ -12,6 +12,7 @@ import {
 import { db } from '../src/firebase'
 import ToDo from './components/ToDo'
 import ToDoForm from './components/ToDoForm'
+import NavBar from './components/NavBar'
 
 function App() {
   const [todos, setTodos] = useState([])
@@ -54,7 +55,7 @@ function App() {
 
   return (
     <Box sx={mainBox} className="App">
-      <h1>List of tasks: {todos.length}</h1>
+      <NavBar total={todos.length} />
       <ToDoForm addTask={addTask} />
       {todos.map((todo) => (
         <ToDo
