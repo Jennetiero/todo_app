@@ -24,6 +24,7 @@ import ToDo from './components/ToDo'
 import ToDoForm from './components/ToDoForm'
 import NavBar from './components/NavBar'
 import { Task } from './interfaces/task'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 const converter: FirestoreDataConverter<Task> = {
   toFirestore(task: WithFieldValue<Task>): DocumentData {
@@ -88,40 +89,44 @@ function App() {
             >
               <Card sx={card} variant="outlined">
                 <CardHeader sx={cardHeader} title="To Be Done" />
-                <CardContent>
-                  {pendingTasks.length > 0 ? (
-                    pendingTasks.map((todo) => (
-                      <ToDo
-                        todo={todo}
-                        key={todo.id}
-                        removeTask={removeTask}
-                        handleComplete={handleComplete}
-                      />
-                    ))
-                  ) : (
-                    <Typography>No Pending Tasks. All Good!</Typography>
-                  )}
-                </CardContent>
+                <Scrollbars autoHeight={true} style={{ width: '100%' }}>
+                  <CardContent>
+                    {pendingTasks.length > 0 ? (
+                      pendingTasks.map((todo) => (
+                        <ToDo
+                          todo={todo}
+                          key={todo.id}
+                          removeTask={removeTask}
+                          handleComplete={handleComplete}
+                        />
+                      ))
+                    ) : (
+                      <Typography>No Pending Tasks. All Good!</Typography>
+                    )}
+                  </CardContent>
+                </Scrollbars>
               </Card>
               <Card sx={card} variant="outlined">
                 <CardHeader
                   sx={{ ...cardHeader, backgroundColor: '#2dd36f' }}
                   title="Completed Tasks"
                 />
-                <CardContent sx={center}>
-                  {completedTasks.length > 0 ? (
-                    completedTasks.map((todo) => (
-                      <ToDo
-                        todo={todo}
-                        key={todo.id}
-                        removeTask={removeTask}
-                        handleComplete={handleComplete}
-                      />
-                    ))
-                  ) : (
-                    <Typography>No Tasks Completed yet</Typography>
-                  )}
-                </CardContent>
+                <Scrollbars autoHeight={true} style={{ width: '100%' }}>
+                  <CardContent sx={center}>
+                    {completedTasks.length > 0 ? (
+                      completedTasks.map((todo) => (
+                        <ToDo
+                          todo={todo}
+                          key={todo.id}
+                          removeTask={removeTask}
+                          handleComplete={handleComplete}
+                        />
+                      ))
+                    ) : (
+                      <Typography>No Tasks Completed yet</Typography>
+                    )}
+                  </CardContent>
+                </Scrollbars>
               </Card>
             </Box>
           </Grid>
