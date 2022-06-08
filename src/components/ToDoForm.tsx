@@ -5,22 +5,23 @@ import Button from '@mui/material/Button'
 import { db } from '../firebase'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
 
-function ToDoForm() {
+function ToDoForm({pendingTasks}) {
   const [userInput, setUserInput] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (userInput !=='' && pendingTasks.findIndex(item=>item.userInput===userInput) === -1){
+    setUserInput('')
     try {
       await addDoc(collection(db, 'tasks'), {
         userInput: userInput,
         completed: false,
         created: Timestamp.fromDate(new Date())
       })
-      setUserInput('')
     } catch (err) {
       alert(err)
     }
-    setUserInput('')
+  } 
   }
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -52,7 +53,7 @@ function ToDoForm() {
       />
       <Button
         style={{
-          backgroundColor: userInput ? '#3880ff' : '#84a8e8',
+          backgroundColor: userInput && pendingTasks.findIndex(item=>item.userInput===userInput) === -1 ? '#3880ff' : '#84a8e8',
           color: 'white'
         }}
         sx={button}
@@ -60,7 +61,7 @@ function ToDoForm() {
         onClick={handleSubmit}
         className="addTask"
         name="addTask"
-        disabled={userInput ? false : true}
+        disabled={userInput && pendingTasks.findIndex(item=>item.userInput===userInput) === -1? false : true}
       >
         Add
       </Button>

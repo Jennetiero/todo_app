@@ -77,7 +77,7 @@ function App() {
           <NavBar total={tasks.length} />
           <Grid xs={12} item marginTop={5}>
             <Box sx={mainBox} className="App">
-              <ToDoForm />
+              <ToDoForm pendingTasks={pendingTasks}/>
             </Box>
           </Grid>
           <Grid item xs={12}>
